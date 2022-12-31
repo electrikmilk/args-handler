@@ -1,5 +1,10 @@
 # args-parser
 
+<p>
+    <a href="https://pkg.go.dev/github.com/electrikmilk/args-parser?tab=doc"><img src="https://godoc.org/github.com/golang/gddo?status.svg" alt="GoDoc"></a>
+    <a href="https://goreportcard.com/report/github.com/electrikmilk/args-parser"><img src="https://goreportcard.com/badge/github.com/electrikmilk/args-parser"/></a>
+</p>
+
 Simple arguments parser written in Go. Mainly here so I can easily use it in my other projects.
 
 You can currently register options/flags, then check on if that flag was used and access it's value if applicable.
