@@ -19,7 +19,7 @@ type argument struct {
 var args map[string]string
 var registered []argument
 
-var customUsage string
+var CustomUsage string
 
 func init() {
 	args = make(map[string]string)
@@ -43,8 +43,8 @@ func init() {
 	}
 }
 
-// Prints a usage message based on the arguments and usage you have registered.
-func usage() {
+// Usage prints a usage message based on the arguments and usage you have registered.
+func Usage() {
 	var availableFlags string
 	for a, arg := range registered {
 		availableFlags += "-" + arg.short
@@ -52,7 +52,7 @@ func usage() {
 			availableFlags += " "
 		}
 	}
-	fmt.Printf("USAGE: %s %s [%s]", os.Args[0], customUsage, availableFlags)
+	fmt.Printf("USAGE: %s %s [%s]", os.Args[0], CustomUsage, availableFlags)
 	fmt.Printf("\nOptions:\n")
 	for _, arg := range registered {
 		fmt.Printf("\t-%s --%s\t%s\n", arg.short, arg.name, arg.description)
@@ -60,7 +60,7 @@ func usage() {
 }
 
 // Register an argument.
-func registerArg(name string, shorthand string, description string) {
+func Register(name string, shorthand string, description string) {
 	for _, r := range registered {
 		if r.name == name {
 			return
@@ -73,8 +73,8 @@ func registerArg(name string, shorthand string, description string) {
 	})
 }
 
-// Returns a boolean indicating if argument name was passed to your executable.
-func arg(name string) bool {
+// Using returns a boolean indicating if argument name was passed to your executable.
+func Using(name string) bool {
 	if len(args) > 0 {
 		if _, ok := args[name]; ok {
 			return true
@@ -90,8 +90,8 @@ func arg(name string) bool {
 	return false
 }
 
-// Returns a string of the value of argument name if passed to your executable.
-func argValue(name string) (value string) {
+// Value returns a string of the value of argument name if passed to your executable.
+func Value(name string) (value string) {
 	if len(args) == 0 {
 		return ""
 	}
