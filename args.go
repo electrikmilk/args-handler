@@ -57,6 +57,7 @@ func PrintUsage() {
 	for _, arg := range registered {
 		fmt.Printf("\t-%s --%s\t%s\n", arg.short, arg.name, arg.description)
 	}
+	os.Exit(1)
 }
 
 // Register an argument.
