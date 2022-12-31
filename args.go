@@ -16,13 +16,13 @@ type argument struct {
 	description string
 }
 
-var args map[string]string
+var Args map[string]string
 var registered []argument
 
 var CustomUsage string
 
 func init() {
-	args = make(map[string]string)
+	Args = make(map[string]string)
 	if len(os.Args) <= 1 {
 		return
 	}
@@ -35,11 +35,11 @@ func init() {
 		if strings.Contains(a, "=") {
 			var keyValue = strings.Split(a, "=")
 			if len(keyValue) > 1 {
-				args[keyValue[0]] = keyValue[1]
+				Args[keyValue[0]] = keyValue[1]
 				continue
 			}
 		}
-		args[a] = ""
+		Args[a] = ""
 	}
 }
 
@@ -76,13 +76,13 @@ func Register(name string, shorthand string, description string) {
 
 // Using returns a boolean indicating if argument name was passed to your executable.
 func Using(name string) bool {
-	if len(args) > 0 {
-		if _, ok := args[name]; ok {
+	if len(Args) > 0 {
+		if _, ok := Args[name]; ok {
 			return true
 		}
 		for _, r := range registered {
 			if r.name == name {
-				if _, ok := args[r.short]; ok {
+				if _, ok := Args[r.short]; ok {
 					return true
 				}
 			}
@@ -93,15 +93,15 @@ func Using(name string) bool {
 
 // Value returns a string of the value of argument name if passed to your executable.
 func Value(name string) (value string) {
-	if len(args) == 0 {
+	if len(Args) == 0 {
 		return ""
 	}
-	if val, ok := args[name]; ok {
+	if val, ok := Args[name]; ok {
 		value = val
 	}
 	for _, r := range registered {
 		if r.name == name {
-			if val, ok := args[r.short]; ok {
+			if val, ok := Args[r.short]; ok {
 				value = val
 			}
 		}
