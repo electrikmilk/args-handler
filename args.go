@@ -43,8 +43,8 @@ func init() {
 	}
 }
 
-// Usage prints a usage message based on the arguments and usage you have registered.
-func Usage() {
+// PrintUsage prints a usage message based on the arguments and usage you have registered then exits.
+func PrintUsage() {
 	var availableFlags string
 	for a, arg := range registered {
 		availableFlags += "-" + arg.short
