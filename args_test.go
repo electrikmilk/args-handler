@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Brandon Jordan
+ * Copyright (c) 2023 Brandon Jordan
  */
 
 package args
@@ -10,15 +10,15 @@ import (
 )
 
 func TestArgs(t *testing.T) {
-	registerArg("arg", "a", "Test argument")
+	Register("arg", "a", "Test argument")
 	fmt.Println("Registered argument \"arg\"")
-	if arg("arg") {
+	if Using("arg") {
 		fmt.Println("Using argument \"arg\".")
 	}
-	if argValue("arg") != "" {
-		fmt.Printf("\"arg\" has a value of \"%s\"\n", argValue("arg"))
+	if Value("arg") != "" {
+		fmt.Printf("\"arg\" has a value of \"%s\"\n", Value("arg"))
 	} else {
 		fmt.Println("\"arg\" has no value")
 	}
-	usage()
+	PrintUsage()
 }
