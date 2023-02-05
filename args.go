@@ -16,9 +16,17 @@ type argument struct {
 	description string
 }
 
+// Args is a map of the args that were passed after the
+// first arg with dash prefixes (e.g. -- or -) trimmed.
+// A value is set for a member of Args if an arg is
+// proceeded with an equality operator (e.g. --arg=value).
 var Args map[string]string
+
 var registered []argument
 
+// CustomUsage allows you to add custom usage details.
+// The value of CustomUsage is printed in between the
+// name of the binary and the flags in the usage message.
 var CustomUsage string
 
 func init() {
