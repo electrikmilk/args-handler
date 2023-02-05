@@ -10,7 +10,7 @@ import (
 )
 
 func TestArgs(t *testing.T) {
-	Register("arg", "a", "Test argument")
+	Register("arg", "a", "Test argument", true)
 	fmt.Println("Registered argument \"arg\"")
 	if Using("arg") {
 		fmt.Println("Using argument \"arg\".")
