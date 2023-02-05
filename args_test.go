@@ -20,5 +20,4 @@ func TestArgs(t *testing.T) {
 	} else {
 		fmt.Println("\"arg\" has no value")
 	}
-	PrintUsage()
 }
