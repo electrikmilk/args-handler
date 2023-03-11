@@ -72,6 +72,9 @@ func PrintUsage() {
 		if arg.expectsValue {
 			short += "="
 			name += "="
+		} else {
+			short += " "
+			name += " "
 		}
 		fmt.Printf("\t-%s --%s\t%s\n", short, name, arg.description)
 	}
