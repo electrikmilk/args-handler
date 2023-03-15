@@ -76,7 +76,11 @@ func PrintUsage() {
 			short += " "
 			name += " "
 		}
-		fmt.Printf("\t-%s --%s\t%s\n", short, name, arg.description)
+		if arg.short == "" {
+			fmt.Printf("\t    --%s\t%s\n", name, arg.description)
+		} else {
+			fmt.Printf("\t-%s --%s\t%s\n", short, name, arg.description)
+		}
 	}
 	os.Exit(1)
 }
