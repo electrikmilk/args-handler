@@ -56,13 +56,13 @@ func init() {
 func PrintUsage() {
 	var availableFlags string
 	for a, arg := range registered {
-		if arg.short != "" {
-			availableFlags += "-" + arg.short
-			if arg.expectsValue {
-				availableFlags += "="
-			}
-		} else {
+		if arg.short == "" {
 			availableFlags += "--" + arg.name
+		} else {
+			availableFlags += "-" + arg.short
+		}
+		if arg.expectsValue {
+			availableFlags += "="
 		}
 		if len(registered)-1 != a {
 			availableFlags += " "
