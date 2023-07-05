@@ -86,7 +86,6 @@ func PrintUsage() {
 			fmt.Printf("\t-%s --%s\t%s\n", short, name, arg.description)
 		}
 	}
-	os.Exit(1)
 }
 
 // Register an argument.
