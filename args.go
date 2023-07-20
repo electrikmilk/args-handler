@@ -111,9 +111,10 @@ func Using(name string) bool {
 		}
 		for _, r := range registered {
 			if r.name == name {
-				if _, ok := Args[r.short]; ok {
-					return true
-				}
+				return true
+			}
+			if _, ok := Args[r.short]; ok {
+				return true
 			}
 		}
 	}
