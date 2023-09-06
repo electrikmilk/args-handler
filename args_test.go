@@ -15,6 +15,7 @@ func TestArgs(t *testing.T) {
 	Register("no-short", "", "Example argument", true)
 	Register("example", "e", "Example argument", true)
 	fmt.Println("Registered argument \"arg\"")
+	Args["arg"] = "5"
 	if Using("arg") {
 		fmt.Println("Using argument \"arg\".")
 	}
@@ -24,4 +25,5 @@ func TestArgs(t *testing.T) {
 		fmt.Println("\"arg\" has no value")
 	}
 	PrintUsage()
+	fmt.Println(Args)
 }
