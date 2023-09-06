@@ -40,7 +40,9 @@ func init() {
 			continue
 		}
 		a = strings.TrimPrefix(a, "--")
-		a = strings.TrimPrefix(a, "-")
+		if strings.Contains("-", a) {
+			a = strings.TrimPrefix(a, "-")
+		}
 		if strings.Contains(a, "=") {
 			var keyValue = strings.Split(a, "=")
 			if len(keyValue) > 1 {
