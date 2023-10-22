@@ -62,7 +62,7 @@ func parseArgs() {
 	}
 }
 
-// PrintUsage prints a usage message based on the arguments and usage you have registered then exits.
+// PrintUsage writes a usage message to stderr based on the arguments and usage you have registered.
 func PrintUsage() {
 	var argumentsUsage = fmt.Sprintf("USAGE: %s %s [%s]\nOptions:\n", os.Args[0], CustomUsage, availableFlags())
 	var maxArgNameLen = argNameMaxLen()
