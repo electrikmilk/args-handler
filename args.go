@@ -64,8 +64,7 @@ func parseArgs() {
 
 // PrintUsage prints a usage message based on the arguments and usage you have registered then exits.
 func PrintUsage() {
-	fmt.Printf("USAGE: %s %s [%s]", os.Args[0], CustomUsage, availableFlags())
-	fmt.Printf("\nOptions:\n")
+	var argumentsUsage = fmt.Sprintf("USAGE: %s %s [%s]\nOptions:\n", os.Args[0], CustomUsage, availableFlags())
 	var maxArgNameLen = argNameMaxLen()
 	for _, arg := range registered {
 		var short = arg.Short
@@ -106,7 +105,12 @@ func PrintUsage() {
 			argumentUsage += fmt.Sprintf(" [default=%s]", arg.DefaultValue)
 		}
 
-		fmt.Println(argumentUsage)
+		argumentsUsage += argumentUsage + "\n"
+	}
+
+	var _, err = fmt.Fprint(os.Stderr, argumentsUsage)
+	if err != nil {
+		panic("unable to write to stderr")
 	}
 }
 
