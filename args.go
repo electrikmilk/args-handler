@@ -29,13 +29,14 @@ var registered []Argument
 
 // CustomUsage allows you to add custom usage details.
 // The value of CustomUsage is printed in between the
-// Name of the binary and the flags in the usage message.
+// name of the binary and the flags in the usage message.
 var CustomUsage string
 
 func init() {
 	parseArgs()
 }
 
+// parseArgs parses the arguments passed to the executable.
 func parseArgs() {
 	Args = make(map[string]string)
 	if len(os.Args) <= 1 {
@@ -109,6 +110,7 @@ func PrintUsage() {
 	}
 }
 
+// availableFlags generates the flags that could be used in a single line.
 func availableFlags() (flags string) {
 	for a, arg := range registered {
 		if arg.Short == "" {
@@ -127,6 +129,7 @@ func availableFlags() (flags string) {
 	return
 }
 
+// argNameMaxLen determines which registered argument has the longest argument name and returns its length.
 func argNameMaxLen() (max int) {
 	for _, arg := range registered {
 		var argNameLen = len(arg.Name)
@@ -156,7 +159,8 @@ func Register(arg Argument) {
 	registered = append(registered, arg)
 }
 
-// Using returns a boolean indicating if Argument Name was passed to your executable.
+// Using returns a boolean indicating if an Argument's Name was passed to your executable.
+// (e.g. --arg or -a)
 func Using(name string) bool {
 	if len(Args) == 0 {
 		return false
@@ -176,7 +180,8 @@ func Using(name string) bool {
 	return false
 }
 
-// Value returns a string of the value of Argument Name if passed to your executable.
+// Value returns a string value if an Argument's Name was passed to your executable with a value.
+// (e.g. --arg=value or -a=value)
 func Value(name string) string {
 	if len(Args) == 0 {
 		return ""
