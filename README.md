@@ -13,7 +13,7 @@ A simple arguments parser written in Go. Mainly here so I can easily use it in m
 You can currently register options/flags, then check on if that flag was used and access its value if applicable.
 
 ```go
-args.Register(Argument{
+args.Register(args.Argument{
         name: "arg",
         description: "My first argument",
 })
