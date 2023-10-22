@@ -33,6 +33,10 @@ var registered []Argument
 var CustomUsage string
 
 func init() {
+	parseArgs()
+}
+
+func parseArgs() {
 	Args = make(map[string]string)
 	if len(os.Args) <= 1 {
 		return
@@ -41,8 +45,11 @@ func init() {
 		if i == 0 {
 			continue
 		}
-		a = strings.TrimPrefix(a, "-")
-		a = strings.TrimPrefix(a, "--")
+		if strings.Contains(a, "--") {
+			a = strings.TrimPrefix(a, "--")
+		} else if strings.Contains(a, "-") {
+			a = strings.TrimPrefix(a, "-")
+		}
 		if strings.Contains(a, "=") {
 			var keyValue = strings.Split(a, "=")
 			if len(keyValue) > 1 {
