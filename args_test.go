@@ -11,29 +11,29 @@ import (
 
 func TestArgs(t *testing.T) {
 	Register(Argument{
-		name:         "arg",
-		short:        "a",
-		description:  "Test argument",
-		defaultValue: "Test",
-		values:       []string{"option1", "option2"},
-		expectsValue: true,
+		Name:         "arg",
+		Short:        "a",
+		Description:  "Test argument",
+		DefaultValue: "Test",
+		Values:       []string{"option1", "option2"},
+		ExpectsValue: true,
 	})
 	Register(Argument{
-		name:         "test",
-		short:        "t",
-		description:  "Test argument 2",
-		expectsValue: false,
+		Name:         "test",
+		Short:        "t",
+		Description:  "Test argument 2",
+		ExpectsValue: false,
 	})
 	Register(Argument{
-		name:         "no-short",
-		short:        "",
-		description:  "Example argument",
-		expectsValue: true,
+		Name:         "no-Short",
+		Short:        "",
+		Description:  "Example argument",
+		ExpectsValue: true,
 	})
 	Register(Argument{
-		name:        "examples-can-be-longer-and-longer",
-		short:       "e",
-		description: "Example argument 2",
+		Name:        "examples-can-be-longer-and-longer",
+		Short:       "e",
+		Description: "Example argument 2",
 	})
 
 	fmt.Println("Registered Argument \"arg\"")

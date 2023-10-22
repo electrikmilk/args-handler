@@ -11,12 +11,12 @@ import (
 )
 
 type Argument struct {
-	name         string
-	short        string
-	description  string
-	defaultValue string
-	values       []string
-	expectsValue bool
+	Name         string
+	Short        string
+	Description  string
+	DefaultValue string
+	Values       []string
+	ExpectsValue bool
 }
 
 // Args is a map of the args that were passed after the
@@ -29,7 +29,7 @@ var registered []Argument
 
 // CustomUsage allows you to add custom usage details.
 // The value of CustomUsage is printed in between the
-// name of the binary and the flags in the usage message.
+// Name of the binary and the flags in the usage message.
 var CustomUsage string
 
 func init() {
@@ -59,9 +59,9 @@ func PrintUsage() {
 	fmt.Printf("\nOptions:\n")
 	var maxArgNameLen = argNameMaxLen()
 	for _, arg := range registered {
-		var short = arg.short
-		var name = arg.name
-		if arg.expectsValue {
+		var short = arg.Short
+		var name = arg.Name
+		if arg.ExpectsValue {
 			short += "="
 			name += "="
 		} else {
@@ -70,7 +70,7 @@ func PrintUsage() {
 		}
 
 		var argumentUsage = "\t"
-		if arg.short != "" {
+		if arg.Short != "" {
 			argumentUsage += fmt.Sprintf(" -%s ", short)
 		} else {
 			argumentUsage += "    "
@@ -78,23 +78,23 @@ func PrintUsage() {
 
 		argumentUsage += fmt.Sprintf("\t --%s ", name)
 
-		var argNameLength = len(arg.name)
+		var argNameLength = len(arg.Name)
 		if argNameLength < maxArgNameLen {
 			argumentUsage += strings.Repeat(" ", maxArgNameLen-argNameLength)
 		}
 
 		argumentUsage += "\t"
 
-		if arg.description != "" {
-			argumentUsage += fmt.Sprintf(" %s", arg.description)
+		if arg.Description != "" {
+			argumentUsage += fmt.Sprintf(" %s", arg.Description)
 		}
 
-		if len(arg.values) != 0 {
-			argumentUsage += " [" + strings.Join(arg.values, ", ") + "]"
+		if len(arg.Values) != 0 {
+			argumentUsage += " [" + strings.Join(arg.Values, ", ") + "]"
 		}
 
-		if arg.defaultValue != "" {
-			argumentUsage += fmt.Sprintf(" [default=%s]", arg.defaultValue)
+		if arg.DefaultValue != "" {
+			argumentUsage += fmt.Sprintf(" [default=%s]", arg.DefaultValue)
 		}
 
 		fmt.Println(argumentUsage)
@@ -103,12 +103,12 @@ func PrintUsage() {
 
 func availableFlags() (flags string) {
 	for a, arg := range registered {
-		if arg.short == "" {
-			flags += "--" + arg.name
+		if arg.Short == "" {
+			flags += "--" + arg.Name
 		} else {
-			flags += "-" + arg.short
+			flags += "-" + arg.Short
 		}
-		if arg.expectsValue {
+		if arg.ExpectsValue {
 			flags += "="
 		}
 		if len(registered)-1 != a {
@@ -121,12 +121,12 @@ func availableFlags() (flags string) {
 
 func argNameMaxLen() (max int) {
 	for _, arg := range registered {
-		var argNameLen = len(arg.name)
+		var argNameLen = len(arg.Name)
 		if argNameLen < max {
 			continue
 		}
 
-		max = len(arg.name)
+		max = len(arg.Name)
 	}
 
 	return max
@@ -134,21 +134,21 @@ func argNameMaxLen() (max int) {
 
 // Register an Argument.
 func Register(arg Argument) {
-	if arg.defaultValue != "" && !arg.expectsValue {
-		panic(fmt.Sprintf("--%s has a default value but does not expect value", arg.name))
+	if arg.DefaultValue != "" && !arg.ExpectsValue {
+		panic(fmt.Sprintf("--%s has a default value but does not expect value", arg.Name))
 	}
 	for _, r := range registered {
-		if r.name == arg.name {
-			panic(fmt.Sprintf("--%s is already a registred argument", arg.name))
+		if r.Name == arg.Name {
+			panic(fmt.Sprintf("--%s is already a registred argument", arg.Name))
 		}
-		if arg.short != "" && r.short == arg.short {
-			panic(fmt.Sprintf("-%s is already a registred shorthand argument", arg.short))
+		if arg.Short != "" && r.Short == arg.Short {
+			panic(fmt.Sprintf("-%s is already a registred shorthand argument", arg.Short))
 		}
 	}
 	registered = append(registered, arg)
 }
 
-// Using returns a boolean indicating if Argument name was passed to your executable.
+// Using returns a boolean indicating if Argument Name was passed to your executable.
 func Using(name string) bool {
 	if len(Args) == 0 {
 		return false
@@ -158,17 +158,17 @@ func Using(name string) bool {
 		return true
 	}
 	for _, r := range registered {
-		if r.name != name {
+		if r.Name != name {
 			continue
 		}
-		if _, ok := Args[r.short]; ok {
+		if _, ok := Args[r.Short]; ok {
 			return true
 		}
 	}
 	return false
 }
 
-// Value returns a string of the value of Argument name if passed to your executable.
+// Value returns a string of the value of Argument Name if passed to your executable.
 func Value(name string) string {
 	if len(Args) == 0 {
 		return ""
@@ -178,10 +178,10 @@ func Value(name string) string {
 		return val
 	}
 	for _, r := range registered {
-		if r.name != name {
+		if r.Name != name {
 			continue
 		}
-		if val, ok := Args[r.short]; ok {
+		if val, ok := Args[r.Short]; ok {
 			return val
 		}
 	}
