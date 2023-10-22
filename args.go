@@ -10,10 +10,12 @@ import (
 	"strings"
 )
 
-type argument struct {
+type Argument struct {
 	name         string
 	short        string
 	description  string
+	defaultValue string
+	values       []string
 	expectsValue bool
 }
 
@@ -23,7 +25,7 @@ type argument struct {
 // proceeded with an equality operator (e.g. --arg=value).
 var Args map[string]string
 
-var registered []argument
+var registered []Argument
 
 // CustomUsage allows you to add custom usage details.
 // The value of CustomUsage is printed in between the
@@ -53,22 +55,9 @@ func init() {
 
 // PrintUsage prints a usage message based on the arguments and usage you have registered then exits.
 func PrintUsage() {
-	var availableFlags string
-	for a, arg := range registered {
-		if arg.short == "" {
-			availableFlags += "--" + arg.name
-		} else {
-			availableFlags += "-" + arg.short
-		}
-		if arg.expectsValue {
-			availableFlags += "="
-		}
-		if len(registered)-1 != a {
-			availableFlags += " "
-		}
-	}
-	fmt.Printf("USAGE: %s %s [%s]", os.Args[0], CustomUsage, availableFlags)
+	fmt.Printf("USAGE: %s %s [%s]", os.Args[0], CustomUsage, availableFlags())
 	fmt.Printf("\nOptions:\n")
+	var maxArgNameLen = argNameMaxLen()
 	for _, arg := range registered {
 		var short = arg.short
 		var name = arg.name
@@ -79,61 +68,123 @@ func PrintUsage() {
 			short += " "
 			name += " "
 		}
-		if arg.short == "" {
-			fmt.Printf("\t    --%s\t%s\n", name, arg.description)
+
+		var argumentUsage = "\t"
+		if arg.short != "" {
+			argumentUsage += fmt.Sprintf(" -%s ", short)
 		} else {
-			fmt.Printf("\t-%s --%s\t%s\n", short, name, arg.description)
+			argumentUsage += "    "
 		}
+
+		argumentUsage += fmt.Sprintf("\t --%s ", name)
+
+		var argNameLength = len(arg.name)
+		if argNameLength < maxArgNameLen {
+			argumentUsage += strings.Repeat(" ", maxArgNameLen-argNameLength)
+		}
+
+		argumentUsage += "\t"
+
+		if arg.description != "" {
+			argumentUsage += fmt.Sprintf(" %s", arg.description)
+		}
+
+		if len(arg.values) != 0 {
+			argumentUsage += " [" + strings.Join(arg.values, ", ") + "]"
+		}
+
+		if arg.defaultValue != "" {
+			argumentUsage += fmt.Sprintf(" [default=%s]", arg.defaultValue)
+		}
+
+		fmt.Println(argumentUsage)
 	}
 }
 
-// Register an argument.
-func Register(name string, shorthand string, description string, expectsValue bool) {
+func availableFlags() (flags string) {
+	for a, arg := range registered {
+		if arg.short == "" {
+			flags += "--" + arg.name
+		} else {
+			flags += "-" + arg.short
+		}
+		if arg.expectsValue {
+			flags += "="
+		}
+		if len(registered)-1 != a {
+			flags += " "
+		}
+	}
+
+	return
+}
+
+func argNameMaxLen() (max int) {
+	for _, arg := range registered {
+		var argNameLen = len(arg.name)
+		if argNameLen < max {
+			continue
+		}
+
+		max = len(arg.name)
+	}
+
+	return max
+}
+
+// Register an Argument.
+func Register(arg Argument) {
+	if arg.defaultValue != "" && !arg.expectsValue {
+		panic(fmt.Sprintf("--%s has a default value but does not expect value", arg.name))
+	}
 	for _, r := range registered {
-		if r.name == name {
-			return
+		if r.name == arg.name {
+			panic(fmt.Sprintf("--%s is already a registred argument", arg.name))
+		}
+		if arg.short != "" && r.short == arg.short {
+			panic(fmt.Sprintf("-%s is already a registred shorthand argument", arg.short))
 		}
 	}
-	registered = append(registered, argument{
-		name:         name,
-		short:        shorthand,
-		description:  description,
-		expectsValue: expectsValue,
-	})
+	registered = append(registered, arg)
 }
 
-// Using returns a boolean indicating if argument name was passed to your executable.
+// Using returns a boolean indicating if Argument name was passed to your executable.
 func Using(name string) bool {
-	if len(Args) > 0 {
-		if _, ok := Args[name]; ok {
-			return true
+	if len(Args) == 0 {
+		return false
+	}
+
+	if _, ok := Args[name]; ok {
+		return true
+	}
+	for _, r := range registered {
+		if r.name != name {
+			continue
 		}
-		for _, r := range registered {
-			if r.name != name {
-				continue
-			}
-			if _, ok := Args[r.short]; ok {
-				return true
-			}
+		if _, ok := Args[r.short]; ok {
+			return true
 		}
 	}
 	return false
 }
 
-// Value returns a string of the value of argument name if passed to your executable.
-func Value(name string) (value string) {
+// Value returns a string of the value of Argument name if passed to your executable.
+func Value(name string) string {
 	if len(Args) == 0 {
 		return ""
 	}
+
 	if val, ok := Args[name]; ok {
-		value = val
+		return val
 	}
 	for _, r := range registered {
-		if r.name == name {
-			if val, ok := Args[r.short]; ok {
-				value = val
-			}
+		if r.name != name {
+			continue
+		}
+		if val, ok := Args[r.short]; ok {
+			return val
 		}
 	}
-	return
+
+	return ""
 }
